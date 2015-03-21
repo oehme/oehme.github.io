@@ -1,0 +1,12 @@
+---
+layout: post
+title: Xtend and Querydsl - Concise, typesafe queries
+date: '2013-07-26T10:54:00.000+02:00'
+author: Stefan Oehme
+tags: 
+modified_time: '2013-07-26T10:54:01.250+02:00'
+blogger_id: tag:blogger.com,1999:blog-7973028861743150658.post-2723068668535526066
+blogger_orig_url: http://mnmlst-dvlpr.blogspot.com/2013/07/xtend-and-querydsl-concise-typesafe.html
+---
+
+<a href="http://www.querydsl.com/">Querydsl </a>is an awesome framework for building typesafe queries for various backends like JPA, JDO or plain SQL. It already reads very nicely in plain Java:<br /><br /><script src="https://gist.github.com/oehme/6087314.js"></script> With Xtend, we can add some careful operator overloading to make this look even more like a normal SQL query, yet completely typesafe:<br /><br /><script src="https://gist.github.com/oehme/6087325.js"></script> I have released these operator overloadings as part of the version 0.0.1 of <a href="https://github.com/oehme/xtend-contrib/blob/master/querydsl/src/main/java/de/oehme/xtend/contrib/querydsl/QueryDslExtensions.xtend">xtend-contrib</a>. As always, I am happy for any feedback you might have.

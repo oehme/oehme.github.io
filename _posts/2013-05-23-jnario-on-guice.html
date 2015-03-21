@@ -1,0 +1,12 @@
+---
+layout: post
+title: Jnario on Guice
+date: '2013-05-23T19:37:00.000+02:00'
+author: Stefan Oehme
+tags: 
+modified_time: '2013-07-03T19:58:50.645+02:00'
+blogger_id: tag:blogger.com,1999:blog-7973028861743150658.post-2229819022059906978
+blogger_orig_url: http://mnmlst-dvlpr.blogspot.com/2013/05/jnario-on-guice.html
+---
+
+I love writing code in <a href="http://www.eclipse.org/xtend/">Xtend</a>, &nbsp;most of you have noticed that already. But there is another language that I see as a perfect partner for Xtend: <a href="http://jnario.org/">Jnario</a>. If you don't know it yet, go check it out!<br /><br />Jnario is a DSL for writing short and readable unit and acceptance tests. The expression syntax is the same as Xtend, so there is not much learning involved. What the Jnario team has added are the concepts of Suites, Features (given-when-then acceptance tests) and Specifications (fact based unit tests). And since it compiles down to plain old <a href="http://junit.org/">JUnit</a>, you can use all your existing test utilities. I introduced it at my current project this monday and people are actually writing tests for fun!<br /><br />One requirement I almost always have for more involved test cases is dependency injection. In the past I've mainly been using <a href="https://code.google.com/p/google-guice/">Guice </a>for that. Luckily, Jnario allows you to control how tests are created and so implementing a DI mechanism was straightforward. The source is&nbsp;available&nbsp;on&nbsp;<a href="https://github.com/oehme/jnario-guice">Github </a>and I am currently working on a Maven repository.<br /><br />All you have to do is to annotate your tests with "@CreateWith(typeof(GuiceSpecCreator))". If you want to add some bindings, you can also add the "@InjectWith" annotation, specifying the Guice module to use for building the Injector.  The following code snippet shows how Jnario's contexts and dependency injection are a perfect fit to write tests for different environments. It is actually a test from the jnario-guice integration itself:  <br /><br /><script src="https://gist.github.com/oehme/5637774.js"></script>

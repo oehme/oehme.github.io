@@ -1,0 +1,12 @@
+---
+layout: post
+title: ! 'Travis CI: Replicating Environment Variables'
+date: '2014-12-15T17:48:00.000+01:00'
+author: Stefan Oehme
+tags: 
+modified_time: '2014-12-15T17:48:00.502+01:00'
+blogger_id: tag:blogger.com,1999:blog-7973028861743150658.post-84901789341698626
+blogger_orig_url: http://mnmlst-dvlpr.blogspot.com/2014/12/travis-ci-replicating-environment.html
+---
+
+I have quite a few <a href="http://github.com/oehme">open source projects</a>&nbsp;that I wish to build/release automatically on pushes/tags. For the release, I need the same environment variables (passwords and API keys) in all of my builds. Unfortunately, <a href="http://travis-ci.org/">Travis </a>currently only allows setting them per project. This quickly becomes annoying, especially if you ever have to change a password.<br /><br />I worked around this by having a seed job where I configure these variables. That job then uses the Travis Ruby-API to push those variables to all other of my build jobs. Feel free to <a href="https://github.com/oehme/travis-secrets-setter">fork the repo</a> and adjust the code to your own needs.<br /><br /><br /><script src="https://gist.github.com/oehme/15427b2243d27f24aa5e.js"></script>
