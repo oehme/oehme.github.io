@@ -11,6 +11,5 @@ twitter_username: StefanOehme
 github_username:  oehme
 
 # Build settings
-kramdown:
- input: GFM
-highlighter: false
+markdown: redcarpet
+pygments_options: ['lineanchors', 'linenos=table']
