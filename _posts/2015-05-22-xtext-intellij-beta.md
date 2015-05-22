@@ -17,7 +17,7 @@ With this week's Beta we have reached a first milestone that we feel comfortable
 
 Lexer-based highlighting works out of the box. So things like Keywords, Strings and Numbers are colored correctly. Semantic highlighting is not yet implemented. We will have to refactor some Eclipse-UI dependent code to make that reusable over different platforms.
 
-![Syntax Highlighting]({{site.baseurl}}/images/xtext-intellij/highlighting.png)
+![Syntax Highlighting]({{site.baseurl}}/images/xtext-intellij/highlighting.PNG)
 
 ### Validation
 
@@ -39,7 +39,7 @@ By implementing IntelliJ's NamedElement API, we benefit from rename refactoring 
 
 Just like the Outline in Eclipse, IntelliJ offers a structural view of your code. By default, the structure is exactly the same, but they can be customized independently. This is because you probably want different icons to fit in with IntelliJ's design.
 
-![Structural View]({{site.baseurl}}/images/xtext-intellij/structure.png)
+![Structural View]({{site.baseurl}}/images/xtext-intellij/structure.PNG)
 
 ### Incremental Compiler
 
@@ -55,11 +55,11 @@ The next approach that we are going to explore is a less invasive integration. W
 
 To develop an IntelliJ plugin for your own Xtext language, install the Beta from our [update site](http://download.eclipse.org/modeling/tmf/xtext/updates/composite/milestones/). You will notice that the `New Project Wizard` now has a second page. Deselect the Eclipse Plugin and select the IntelliJ Plugin instead.
 
-![New Xtext Wizard]({{site.baseurl}}/images/xtext-intellij/wizard.png)
+![New Xtext Wizard]({{site.baseurl}}/images/xtext-intellij/wizard.PNG)
 
 This will create the necessary projects for you. Since building IntelliJ plugins requires quite a lot of setup and repetitive tasks, we created a [Gradle](gradle.org) build plugin to make this as easy as possible. After generating the language infrastructure, you can use `gradle runIdea` in your IDEA plugin's folder to start InteliiJ with your plugin installed.
 
-![Running IDEA with Gradle]({{site.baseurl}}/images/xtext-intellij/run-idea.png)
+![Running IDEA with Gradle]({{site.baseurl}}/images/xtext-intellij/run-idea.PNG)
 
 You can also run `gradle eclipse` to generate a classpath containing all the necessary libraries, so you can browse and edit your plugin's source code.
 
