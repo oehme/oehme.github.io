@@ -49,7 +49,7 @@ We have created an all-new incremental generator infrastructure that is independ
 
 Hooking into IntelliJ's Java type system turned out to be much harder than anticipated. Our first approach of using so called LightElements did not work out, as many of IntelliJ APIs expect Java types to be backed up by actual Java source code. Our second try was to compile to Java on the fly and let IntelliJ parse that. But since reparsing is a very frequent activity in IntelliJ, this resulted in catastrophic performance.
 
-The next approach that we are going to explore is a more lightweight integration, that is generating Java code in the background and letting IntelliJ's Java tooling link against the generated code. This is a similar approach we use for integration with JDT in Eclipse, where it has proven to work nicely. The challenge here will be to find appropriate APIs to change navigation and other UI services, so the user is taken back to his DSL files and not to generated Java code.
+The next approach that we are going to explore is a less invasive integration, that is generating Java code in the background and letting IntelliJ's Java tooling link against the generated code. This is a similar approach we use for integration with JDT in Eclipse, where it has proven to work nicely. The challenge here will be to find appropriate APIs to change navigation and other UI services, so the user is taken back to his DSL files and not to generated Java code.
 
 ## Can I try it myself?
 
