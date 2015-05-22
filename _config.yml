@@ -1,7 +1,8 @@
 # Site settings
 title: Mnmlst Dvlpr
+author: Stefan Oehme
 email: st.oehme@gmail.com
-description: > 
+description: >
   A blog about developing software
   as well as myself.
 baseurl: ""
