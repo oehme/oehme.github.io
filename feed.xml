@@ -14,10 +14,6 @@ layout: null
     {% for post in site.posts limit:10 %}
       <item>
         <title>{{ post.title | xml_escape }}</title>
-        <author>
-          <name>{{ site.author | xml_escape }}</name>
-          <email>{{ site.email | xml_escape }}</email>
-        </author>
         <dc:creator>{{ site.author | xml_escape }}</dc:creator>
         <description>{{ post.content | xml_escape }}</description>
         <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
