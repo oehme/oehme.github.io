@@ -3,11 +3,9 @@ title: Mnmlst Dvlpr
 author: Stefan Oehme
 email: st.oehme@gmail.com
 description: >
-  A blog about developing software
-  as well as myself.
+  Minimalist, vegan, Gradle core team lead.
 baseurl: ""
 url: "https://oehme.github.io"
-twitter_username: StefanOehme
 github_username:  oehme
 
 # Build settings
