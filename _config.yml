@@ -2,12 +2,17 @@
 title: Mnmlst Dvlpr
 author: Stefan Oehme
 email: st.oehme@gmail.com
-description: >
-  Minimalist, vegan, Gradle core team lead.
+description: Minimalist, vegan, Gradle core team lead.
 baseurl: ""
 url: "https://oehme.github.io"
 github_username:  oehme
 
 # Build settings
-markdown: redcarpet
-pygments_options: ['lineanchors', 'linenos=table']
+markdown: kramdown
+kramdown:
+  input: GFM
+theme: minima
+plugins:
+  - jekyll-feed
+
+permalink: /:categories/:title
