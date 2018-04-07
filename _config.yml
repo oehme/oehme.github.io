@@ -14,11 +14,8 @@ kramdown:
 theme: minima
 plugins:
   - jekyll-feed
-  - jekyll-analytics
 
 permalink: /:categories/:title
 show_excerpts: true
 
-jekyll_analytics:
-  GoogleAnalytics:
-    id: UA-20206101-2
+google_analytics: UA-20206101-2
