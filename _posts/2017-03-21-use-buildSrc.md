@@ -138,7 +138,7 @@ class MyBintrayPlugin implements Plugin<Project> {
 {% endhighlight %}
 </figure>
 
-You can then give this plugin an id and use it in your project like so:
+You can then give this plugin an id and use the much nicer plugin DSL to apply it.
 
 <figure>
   <figcaption>buildSrc/build.gradle</figcaption>
@@ -158,7 +158,9 @@ gradlePlugin {
 <figure>
   <figcaption>some-project.gradle</figcaption>
 {% highlight groovy %}
-apply plugin: 'bintray'
+plugins {
+  id 'bintray'
+}
 
 tasks.withType(BintrayUploadTask) {
   //some project-specific config
@@ -188,10 +190,10 @@ For instance, here is the plugin from earlier, translated to Java.
 {% highlight groovy %}
 public class MyBintrayPlugin implements Plugin<Project> {
   public void apply(Project project) {
-    project.plugins.apply('com.jfrog.bintray')
+    project.plugins.apply('com.jfrog.bintray');
     project.tasks.withType(BintrayUploadTask, () -> {
       //set some defaults
-    })
+    });
   }
 }
 {% endhighlight %}
