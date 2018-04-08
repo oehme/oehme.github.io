@@ -45,7 +45,7 @@ buildscript {
     }
 }
 
-apply plugin: org.springframework.boot.gradle.plugin.SpringBootPlugin
+apply plugin: 'org.springframework.boot.gradle.plugin.SpringBootPlugin'
 
 springBoot {
   //set some defaults
@@ -190,7 +190,7 @@ For instance, here is the plugin from earlier, translated to Java.
 {% highlight java %}
 public class MySpringBootPlugin implements Plugin<Project> {
   public void apply(Project project) {
-    project.plugins.apply('org.springframework.boot');
+    project.plugins.apply("org.springframework.boot");
     project.extensions.configure(SpringBootExtension, () -> {
       //some complex team/company-specific defaults
     });

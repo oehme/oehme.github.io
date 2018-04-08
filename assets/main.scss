@@ -1,0 +1,24 @@
+---
+---
+
+$base-font-family: "Open Sans", sans-serif;
+$heading-font-family: "Francois One", sans-serif;
+$code-font-family: "Anonymous Pro", monospace;
+
+@import "minima";
+@import "syntax-highlighting";
+
+.site-header, .site-footer {
+  border-top: 0;
+  max-width: $content-width;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6, .site-header {
+  font-family: $heading-font-family;
+}
+
+pre, code {
+  font-family: $code-font-family;
+  background-color: white;
+}
