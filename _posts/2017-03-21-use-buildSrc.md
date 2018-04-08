@@ -8,7 +8,7 @@ Organizing your build logic properly can make the difference between a tool that
 Gradle offers different ways to organize build logic:
 
 1. Scripting in a project's build script
-2. Writing reusable scripts
+2. Writing scripts that are applied to multiple projects
 3. Writing binary plugins in [`buildSrc`](https://docs.gradle.org/current/userguide/organizing_build_logic.html#sec:build_sources)
 4. Writing binary plugins shared through a repository with other teams
 
@@ -30,38 +30,38 @@ Let's see how these properties make `buildSrc` such a great tool.
 If you have ever tried splitting a complex build script into multiple smaller ones you may have run into [classloading problems](https://github.com/gradle/gradle/issues/1262).
 Project build scripts cannot see classes loaded by scripts that they apply.
 
-For instance, you may have a `bintray.gradle` script that loads the Bintray plugin and configures some defaults.
+For instance, you may have a `spring-boot.gradle` script that loads the Spring Boot plugin and configures some defaults.
 Already there are some oddities - you have to apply the plugin by its class name instead of id.
 
 <figure>
-  <figcaption>bintray.gradle</figcaption>
+  <figcaption>spring-boot.gradle</figcaption>
 {% highlight groovy %}
 buildscript {
     repositories {
-        jcenter()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE'
     }
 }
 
-apply plugin: com.jfrog.bintray.gradle.BintrayPlugin
+apply plugin: org.springframework.boot.gradle.plugin.SpringBootPlugin
 
-tasks.withType(BintrayUploadTask) {
+springBoot {
   //set some defaults
 }
 {% endhighlight %}
 </figure>
 
-But even worse - when you try referencing any of the Bintray plugin's types in a project script, you'll
+But even worse - when you try referencing any of the Spring Boot plugin's types in a project script, you'll
 be greeted with script compilation errors.
 
 <figure>
   <figcaption>some-project.gradle</figcaption>
 {% highlight groovy %}
-apply from: 'bintray.gradle'
+apply from: 'spring-boot.gradle'
 
-tasks.withType(BintrayUploadTask) { //won't compile :(
+tasks.withType(BootRun) { //won't compile :(
   //some project-specific config
 }
 {% endhighlight %}
@@ -79,10 +79,10 @@ apply plugin: 'java-library'
 apply plugin: 'java-gradle-plugin'
 
 repositories {
-    jcenter()
+    gradlePluginPortal()
 }
 dependencies {
-    api 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    api 'org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE'
 }
 {% endhighlight %}
 </figure>
@@ -90,11 +90,11 @@ dependencies {
 The two scripts from earlier can now be simplified and will work just as you'd expect.
 
 <figure>
-  <figcaption>bintray.gradle</figcaption>
+  <figcaption>spring-boot.gradle</figcaption>
 {% highlight groovy %}
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'org.springframework.boot'
 
-tasks.withType(BintrayUploadTask) {
+springBoot {
   //set some defaults
 }
 {% endhighlight %}
@@ -103,9 +103,9 @@ tasks.withType(BintrayUploadTask) {
 <figure>
   <figcaption>some-project.gradle</figcaption>
 {% highlight groovy %}
-apply from: 'bintray.gradle'
+apply from: 'spring-boot.gradle'
 
-tasks.withType(BintrayUploadTask) {
+tasks.withType(BootRun) {
   //some project-specific config
 }
 {% endhighlight %}
@@ -113,7 +113,7 @@ tasks.withType(BintrayUploadTask) {
 
 ## IDE support
 
-The example above still uses a script for configuring the Bintray defaults.
+The example above still uses a script for configuring the Spring Boot defaults.
 I highly recommend moving this logic into `buildSrc` as soon as it gets more complex.
 Writing plugins in `buildSrc` gives you much better IDE support than writing scripts.
 Your IDE will offer you syntax highlighting, auto completion, source navigation and refactoring.
@@ -123,14 +123,14 @@ A script is just a plugin without the class/method boilerplate.
 Here is how that plugin could look like when copy-pasted to `buildSrc`.
 
 <figure>
-  <figcaption>buildSrc/src/main/groovy/MyBintrayPlugin.groovy</figcaption>
+  <figcaption>buildSrc/src/main/groovy/MySpringBootPlugin.groovy</figcaption>
 {% highlight groovy %}
-class MyBintrayPlugin implements Plugin<Project> {
+class MySpringBootPlugin implements Plugin<Project> {
   void apply(Project project) {
     project.with {
-      apply plugin: 'com.jfrog.bintray'
-      tasks.withType(BintrayUploadTask) {
-        //set some defaults
+      apply plugin: 'org.springframework.boot'
+      springBoot {
+        //some complex team/company-specific defaults
       }
     }
   }
@@ -145,9 +145,9 @@ You can then give this plugin an id and use the much nicer plugin DSL to apply i
 {% highlight groovy %}
 gradlePlugin {
     plugins {
-        bintray {
-            id = 'bintray'
-            implementationClass = 'MyBintrayPlugin'
+        springBoot {
+            id = 'spring-boot'
+            implementationClass = 'MySpringBootPlugin'
         }
     }
 }
@@ -159,10 +159,10 @@ gradlePlugin {
   <figcaption>some-project.gradle</figcaption>
 {% highlight groovy %}
 plugins {
-  id 'bintray'
+  id 'spring-boot'
 }
 
-tasks.withType(BintrayUploadTask) {
+tasks.withType(BootRun) {
   //some project-specific config
 }
 {% endhighlight %}
@@ -179,20 +179,20 @@ allows you to refactor without fear of breaking your developers' workflow.
 
 While dynamic Groovy allows you to build very succinct and readable DSLs, it also has a rather high execution overhead.
 If you have a large project and scripts that you apply to all subprojects, consider using statically compiled `buildSrc` plugins instead.
-Of course, you could just switch the script over to the statically compiled Kotlin DSL.
+Of course, you could just switch the script over to the statically compiled [Kotlin DSL](https://github.com/gradle/kotlin-dsl).
 But moving it to `buildSrc` and turning it into a proper plugin gives you all the other benefits mentioned above.
 And if neither Kotlin nor Groovy are your cup of tea when it comes to writing complex logic,
 you can write it in plain old Java too. Any statically compiled language is great for performance.
 
 For instance, here is the plugin from earlier, translated to Java.
 <figure>
-  <figcaption>buildSrc/src/main/groovy/MyBintrayPlugin.java</figcaption>
-{% highlight groovy %}
-public class MyBintrayPlugin implements Plugin<Project> {
+  <figcaption>buildSrc/src/main/groovy/MySpringBootPlugin.java</figcaption>
+{% highlight java %}
+public class MySpringBootPlugin implements Plugin<Project> {
   public void apply(Project project) {
-    project.plugins.apply('com.jfrog.bintray');
-    project.tasks.withType(BintrayUploadTask, () -> {
-      //set some defaults
+    project.plugins.apply('org.springframework.boot');
+    project.extensions.configure(SpringBootExtension, () -> {
+      //some complex team/company-specific defaults
     });
   }
 }
