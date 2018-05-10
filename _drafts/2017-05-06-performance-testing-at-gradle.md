@@ -3,8 +3,8 @@ layout: post
 title: "Performance testing at Gradle"
 ---
 
-Performance is one of Gradle's most important features. This is why we go to great lengths to ensure that Gradle stays fast and keeps improving with every release.
-I'm proud of the performance testing infrastructure that we've built up over the last two years and would like to give you a tour of it.
+Performance is one of Gradle's most important features. This is why we go to great lengths to ensure that Gradle stays fast and improves with every release.
+I'm proud of the performance testing infrastructure that we've built over the last two years and would like to give you a tour of it.
 
 ## Overview
 
@@ -19,17 +19,15 @@ They can either have hand-picked thresholds like "the cache overhead should be n
 serving only an informational purpose. 
 Most experiments are run once a day, as they usually excercise more complex scenarios that take longer to run.
 
-The tests are spread out over a farm of dedicated performance test agents, 
-each with exactly the same hardware and software configuration to ensure reproducible results.
-The full regression test suite takes about 40 minutes at this point, though the target is to get it back down to 30.
+The tests are distributed over a farm of build agents to achieve an acceptable execution time.
 
 The test results are stored in a database so we can render historical reports and see both positive and negative trends.
 The following graph shows the recent history of how long it takes to run `gradle idea` on a 500-subproject Java build.
 
 ![performance test history](/images/history-idea-large-java-project.png)
 
-Once a week we run a historical build that compares the current version of Gradle against a wide selection of older versions.
-This shows us the bigger picture of how much we've improved, not just in the last release, but over the last year or more.
+Once a week, we run a historical build that compares the current version of Gradle against a wide selection of older versions.
+This shows us the bigger picture and allows us to measure how much we've improved, not just in the last release, but over the last year or more.
 
 ## Scenarios
 
@@ -41,21 +39,35 @@ A typical performance test definition might look like this:
 
 There are two kinds of test projects: Fully synthetic and representative. 
 
-Fully synthetic projects are generated to show how fast an ideal usage of Gradle can be.
+**Fully synthetic projects** are generated to show how fast an ideal usage of Gradle can be.
 They are usually very big and used to explore scaling bottlenecks in Gradle.
 
-Representative projects try to mimic some of the real world builds we've seen at our customers,
-without exposing any of their propietary details.
+**Representative projects** try to mimic some of the real-world builds we've seen at our customers,
+without exposing any of their proprietary details.
 These builds give us a reality check on which non-ideal usage patterns we should speed up or prevent.
+
+## Distributed execution
+
+Running all our performance scenarios on one machine would take more than half a day.
+We want to run most of them on every commit, so we need to go much faster.
+We do this using a "coordinator" build, which discovers all the scenarios and schedules individual builds for each of them.
+The coordinator uses TeamCity's REST API to schedule and wait for the scenarios.
+Once they are finished, the coordinator gets the scenario results and synthesizes a test report.
+From the TeamCity UI it looks just as if all the tests had run on the same machine. 
+You can browse executed tests, see their execution time and how often they've failed in the past.
+
+All the build agents are automatically managed, dedicated servers with exactly the same hardware and software configuration.
+This ensures that the results are reproducible. 
+The full regression test suite takes about an hour to run, though the target is to get it down to 30 minutes.
 
 ## Regression detection
 
-For regression tests we run the current code against a baseline, usually some recent nightly that is known to be well-performing.
+For regression tests, we run the current code against a baseline, usually some recent nightly build that is known to be well-performing.
 Each version gets its own user home, temporary directory etc. to ensure isolation.
 We even go so far as to pad folder names so that each version under test needs to use the same amount of memory for its file system cache keys.
 
 Each version is given ample warmup time and is then usually measured for 40 iterations. 
-Afterwards we use a [Mann-Whitney u test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test) to determine whether the current version is significantly slower than the baseline.
+Afterwards, we use a [Mann-Whitney u test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test) to determine whether the current version is significantly slower than the baseline.
 If so, the test fails and someone has to investigate. 
 
 We require a confidence of 99%, so there is still a 1% chance that a test may fail due to pure bad luck.
@@ -68,10 +80,10 @@ That means if a commit makes a 5s build just 50ms slower, the performance test w
 It is not always obvious what caused a performance regression.
 A commit may look unsuspicious at first, but have some unintended side effect.
 A regression may have gone undetected because it was very small and now another, equally small regression pushed the test over the edge.
-In both cases the committer needs more data to find out what the problem is.
+In both cases, the committer needs more data to find out what the problem is.
 
-For this purpose we can run any scenario with the [Java Flight Recorder](http://www.oracle.com/technetwork/java/javaseproducts/mission-control/java-mission-control-1998576.html) attached.
-This gives us highly accurate data on CPU usage, memory allocation, file and network IO and blocked threads.
+For this purpose, we can run any scenario with the [Java Flight Recorder](http://www.oracle.com/technetwork/java/javaseproducts/mission-control/java-mission-control-1998576.html) attached.
+This gives us highly accurate data on CPU usage, memory allocation, file and network IO, and blocked threads.
 The data is visualized using the [jfr-flamegraph converter](https://github.com/chrishantha/jfr-flame-graph) 
 and the [FlameGraph tool](https://github.com/brendangregg/FlameGraph).
 You can zoom and search the stacks and quickly explore both the top-down (flame graph) and bottom-up (icicle graph) resource usage of the version under test.
@@ -86,7 +98,7 @@ We had recently migrated most of our scripts from Groovy to Kotlin and didn't se
 A look at the graph quickly shows that inefficient classloader caching was to blame.
 This analysis took no more than a few minutes and uncovered an issue that may otherwise have led to disappointed users.
 
-For each tested version we also create a diff against every other tested version. 
+For each tested version, we also create a diff against every other tested version. 
 This usually makes it pretty easy to spot where things got slower or faster.
 For instance, this flame graph diff shows what happened when we removed the rule-based model bridging from projects that aren't using the rule-based model.
 
@@ -95,15 +107,15 @@ For instance, this flame graph diff shows what happened when we removed the rule
 </p>
 
 You can clearly see task creation in dark blue, meaning it is much faster now.
-Red on the other hand would mean that something got significantly slower.
+Red, on the other hand, would mean that something got significantly slower.
 You can also look at the [fully detailed version](/images/diff-flamegraph-model-bridging-detailed.svg) (1 MB).
 
 ## Coming to you soon
 
-The flame graphs you saw above will soon be added to the [Gradle Profiler](https://github.com/gradle/gradle-profiler), a tool that deserves its own blog post.
-With it you'll be able to easily create the same visualizations for your own performance scenarios.
+The flame graphs you saw above will soon be added to the [Gradle Profiler](https://github.com/gradle/gradle-profiler), a tool that deserves its own blog post in the future.
+With it, you'll be able to easily create the same visualizations for your own performance scenarios.
 This will allow both plugin authors and build engineers optimize their to algorithms for the fastest possible builds.
 
-The Gradle team will of course keep pushing for ever faster builds. 
+The Gradle team will, of course, keep pushing for ever-faster builds. 
 Gradle 4.8 will contain some nice configuration time improvements for large Android builds. 
 These improvements were only possible thanks to JFR snapshots generously provided by our customers and the great work on flame graphs done by [Brendan Gregg](https://github.com/brendangregg) and [Chrishantha Perera](https://github.com/chrishantha). Thank you so much!
