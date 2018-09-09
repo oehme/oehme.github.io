@@ -8,6 +8,10 @@ $code-font-family: "Anonymous Pro", monospace;
 @import "minima";
 @import "syntax-highlighting";
 
+body {
+  display: block;
+}
+
 .site-header, .site-footer {
   max-width: $content-width;
   margin: 0 auto;
