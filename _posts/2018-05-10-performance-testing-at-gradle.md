@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Performance testing at Gradle"
+image: images/me.png
 ---
 
 Performance is one of Gradle's most important features. This is why we go to great lengths to ensure that Gradle stays fast and improves with every release.

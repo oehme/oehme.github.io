@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Stop rerunning your tests"
+image: images/me.png
 ---
 
 Tests are usually the longest running operation in your development process.

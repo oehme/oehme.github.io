@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "The build-changing magic of tidying up"
+image: images/me.png
 ---
 
 Organizing your build logic properly can make the difference between a tool that your developers will love or a mess of spaghetti code that no one dares to touch.
