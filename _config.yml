@@ -6,6 +6,7 @@ description: Minimalist, vegan, Gradle core team lead.
 baseurl: ""
 url: "https://oehme.github.io"
 github_username:  oehme
+twitter_username: StefanOehme
 
 # Build settings
 markdown: kramdown

@@ -13,6 +13,6 @@ and background stories as well as lessons learned from working on such a large o
 
 # Contact
 
-If you'd like to discuss one of my posts feel free to contact me via [email](mailto:st.oehme@gmail.com).
+If you'd like to discuss one of my posts, feel free to mention me on [Twitter](https://twitter.com/StefanOehme).
 
 [Subscribe](/feed.xml) to my blog or follow me on [GitHub](https://github.com/oehme) to see what I'm currently up to.
