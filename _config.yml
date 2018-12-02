@@ -18,5 +18,3 @@ plugins:
 
 permalink: /:categories/:title
 show_excerpts: true
-
-google_analytics: UA-20206101-2
