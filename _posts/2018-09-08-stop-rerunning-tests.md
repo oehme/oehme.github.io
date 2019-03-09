@@ -20,28 +20,15 @@ tasks.withType(Test) {
 }
 ```
 
-Let's talk about what this means and why it is **always** wrong.
+Let's talk about what this means and why it is a bad idea.
 
-## This doesn't actually force reruns
+## Communicating intent
 
-What the author of this snippet probably wanted to say is "Always rerun my tests".
-That's not what this snippet does though. 
-It will only mark the task out-of-date, forcing Gradle to *recreate* the output.
-But here's the thing, if the build cache is enabled, Gradle doesn't need to run the task to recreate the output. 
-It will find an entry in the cache and unpack the result into the test's output directory.
+The above snippet just says "Never reuse this test's output". 
+But why? Is it because there is some hidden input that Gradle doesn't know about?
+Or is it because the test produces random outputs? The reader can't tell.
 
-The same is true for this snippet:
-
-```(groovy)
-test.dependsOn cleanTest
-```
-
-Gradle will unpack the test results from the build cache after the output has been cleaned, so nothing will be rerun.
-In short, these snippets are creating a very expensive no-op.
-
-If you're now thinking "Okay, I'll deactivate the cache too", let me tell you why you shouldn't.
-
-## Forcing reruns is insane
+## Deterministic tests don't need reruns
 
 > "Insanity is doing the same thing over and over and expecting different results"
 >  
