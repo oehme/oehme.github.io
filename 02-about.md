@@ -6,9 +6,10 @@ permalink: /about/
 
 My name is Stefan Oehme and I love making other people more productive.
 
-I'm a developer and team leader at [Gradle](https://gradle.org). I will be sharing Gradle tips
-and background stories as well as lessons learned from working on such a large open source project.
+I'm an independent software developer, specializing in developer productivity and performance. 
+I previously was an engineer at [Gradle](https://gradle.org), working both on the open source build tool and enterprise offerings. 
 
+In my free time I enjoy bouldering, RPGs and of course spending time with my wife and friends.
 ![me](/images/me.png)
 
 # Contact
